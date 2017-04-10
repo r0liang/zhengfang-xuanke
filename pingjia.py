@@ -173,12 +173,12 @@ def pingjia():
         res = open(hosturl+c,'',hosturl+c).read().decode('gbk')
         p = pq(res)
         ele = getele(res)
-        first=True
+        isfirstlist=[]
         for e in ele:
-            if e[:9]=='DataGrid1':
-                if first:
+            if e[:8]=='DataGrid':
+                if e[:9] not in isfirstlist:
                     ele[e]=u'比较符合'.encode('gbk')
-                    first=False
+                    isfirstlist.append(e[:9])
                 else:
                     ele[e]=u'非常符合'.encode('gbk')
         ele.update({'Button1':u'保  存'.encode('gbk')})
