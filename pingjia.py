@@ -14,7 +14,7 @@ session=""
 name=""
 aspxsession=""
 courselist=[]
-loginpage="default3.aspx"
+loginpage="default5.aspx"
 gnmkdm=None
 #urllib函数，用于提交http数据
 def open(aurl,post='',Referer=''):
@@ -64,6 +64,7 @@ def login():
         if fi.eq(i).attr('name')=="TextBox3":
             icodeurl="CheckCode.aspx"
             icoderes=open(hosturl+icodeurl).read()
+            from PIL import Image
             img = Image.open(StringIO.StringIO(icoderes))
             img = img.convert('RGB')
             img.save(username+"icode.jpeg")
@@ -76,7 +77,8 @@ def login():
         print u"登录成功"
         res=open(hosturl+"xs_main.aspx?xh="+username).read().decode('gbk')
         d = pq(res)
-        name = re.findall(u"(?<=\s\s).*?(?=同学)",d('#xhxm').text(),re.DOTALL)[0]
+        print d('#xhxm').text()
+        name = re.findall(u".*?(?=同学)",d('#xhxm').text(),re.DOTALL)[0]
         print u"用户名："+name
         '''
         try:
