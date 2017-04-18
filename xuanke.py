@@ -6,7 +6,6 @@ from pyquery import PyQuery as pq
 from lxml import etree
 import os
 import string
-from PIL import Image
 import StringIO
 username=""
 password=""
@@ -18,7 +17,7 @@ classres=""
 onhook=0
 gnmkdm=""
 aspxsession=""
-loginpage="default3.aspx"
+loginpage="default5.aspx"
 #urllib函数，用于提交http数据
 def open(aurl,post='',Referer=''):
     #proxy = 'http://127.0.0.1:8088'
@@ -67,6 +66,7 @@ def login():
         if fi.eq(i).attr('name')=="TextBox3":
             icodeurl="CheckCode.aspx"
             icoderes=open(hosturl+icodeurl).read()
+            from PIL import Image
             img = Image.open(StringIO.StringIO(icoderes))
             img = img.convert('RGB')
             img.save(username+"icode.jpeg")
@@ -79,7 +79,7 @@ def login():
         print u"登录成功"
         res=open(hosturl+"xs_main.aspx?xh="+username).read().decode('gbk')
         d = pq(res)
-        name = re.findall(u"(?<=\s\s).*?(?=同学)",d('#xhxm').text(),re.DOTALL)[0]
+        name = re.findall(u".*?(?=同学)",d('#xhxm').text(),re.DOTALL)[0]
         print u"用户名："+name
         try:
         	gnmkdm = re.findall(u"(?<=xf_xsqxxxk.aspx\?xh="+username+"\&xm="+name+"\&gnmkdm=).*?(?=\")",res,re.DOTALL)[0]
@@ -285,7 +285,7 @@ def init():
     global username,password
     username=raw_input("用户名:")
     password=raw_input("密  码:")
-    
+
 #程序开始
 if __name__ == '__main__':
     init()
