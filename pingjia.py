@@ -1,4 +1,4 @@
-# coding: UTF-8
+#coding=utf-8
 import urllib
 import urllib2
 import re
@@ -7,9 +7,13 @@ from lxml import etree
 import os
 import string
 import StringIO
+import msvcrt
+
+
 username=""
 password=""
-host="http://221.218.249.116/"
+
+host="http://222.217.151.47/"
 session=""
 name=""
 aspxsession=""
@@ -68,8 +72,7 @@ def login():
             img = Image.open(StringIO.StringIO(icoderes))
             img = img.convert('RGB')
             img.save(username+"icode.jpeg")
-            os.system("jp2a "+username+"icode.jpeg -b -i --colors --chars=' *'")
-            icode=raw_input("请输入验证码:")
+            icode=raw_input(unicode('请输入目录下验证码内容:','UTF-8').encode('GBK'))
             ele.update({fi.eq(i).attr('name'):icode})
     ele.update({'TextBox1': username, 'TextBox2': password, 'ddl_js':u'学生'.encode('gbk'), 'Button1':u" 登 录 ".encode('gbk')})
     res = open(hosturl+loginpage,ele).read().decode('gbk')
@@ -82,10 +85,10 @@ def login():
         print u"用户名："+name
         '''
         try:
-        	gnmkdm = re.findall(u"(?<=xf_xsqxxxk.aspx\?xh="+username+"\&xm="+name+"\&gnmkdm=).*?(?=\")",res,re.DOTALL)[0]
+            gnmkdm = re.findall(u"(?<=xf_xsqxxxk.aspx\?xh="+username+"\&xm="+name+"\&gnmkdm=).*?(?=\")",res,re.DOTALL)[0]
         except:
-        	print u"没有找到选课界面"
-        	exit()
+            print u"没有找到选课界面"
+            exit()
         '''
         return 1
     elif u"密码错误" in res:
@@ -179,10 +182,10 @@ def pingjia():
         for e in ele:
             if e[:8]=='DataGrid':
                 if e[:9] not in isfirstlist:
-                    ele[e]=u'比较符合'.encode('gbk')
+                    ele[e]=u'优'.encode('gbk')
                     isfirstlist.append(e[:9])
                 else:
-                    ele[e]=u'非常符合'.encode('gbk')
+                    ele[e]=u'良'.encode('gbk')
         ele.update({'Button1':u'保  存'.encode('gbk')})
         res = open(hosturl+c,ele,hosturl+c).read().decode('gbk')
 
@@ -196,8 +199,9 @@ def submitpingjia():
 #程序初始化登录函数
 def init():
     global username,password
-    username=raw_input("用户名:")
-    password=raw_input("密  码:")
+    print u"自动化要学会控制1.1"
+    username=raw_input(unicode('学号:','UTF-8').encode('gbk'))
+    password=raw_input(unicode('密码:','UTF-8').encode('gbk'))
 #程序开始
 if __name__ == '__main__':
     init()
@@ -209,3 +213,8 @@ if __name__ == '__main__':
     pingjia()
     submitpingjia()
     print u"您已完成评价,共评价%d节课程，感谢使用"%(len(courselist))
+    print u"按下 D 来退出本程序"
+
+    while True:
+     if ord(msvcrt.getch()) in [68, 100]:
+           exit()
